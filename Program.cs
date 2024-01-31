@@ -1,3 +1,4 @@
+using BlazorAppConsumoAPI.Composite;
 using BlazorAppConsumoAPI.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -13,6 +14,9 @@ builder.Services.AddHttpClient("ApiService", client =>
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<APITTHH>();
+
+// Registra tus servicios aquí
+builder.Services.AddScoped<BlazorAppConsumoAPI.Composite.IComponent, CompositeService>();
 
 
 var app = builder.Build();
