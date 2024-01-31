@@ -3,7 +3,7 @@
 @using BlazorAppConsumoAPI.Services;
 @using BlazorAppConsumoAPI.Composite;
 @inject APITTHH _api
-@inject             Composite.IComponent _composite
+@inject Composite.IComponent _composite
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 
@@ -51,9 +51,6 @@
             </div>
         </div>
 </div>
-
-
-
 
 
     <style>
@@ -136,6 +133,7 @@ body {
 }
 
 }</style>
+
 
 @code {
     private LoginModel loginModel = new LoginModel();

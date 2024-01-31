@@ -1,4 +1,5 @@
 using BlazorAppConsumoAPI.Composite;
+using BlazorAppConsumoAPI.Observer;
 using BlazorAppConsumoAPI.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -17,6 +18,9 @@ builder.Services.AddScoped<APITTHH>();
 
 // Registra tus servicios aquí
 builder.Services.AddScoped<BlazorAppConsumoAPI.Composite.IComponent, CompositeService>();
+
+builder.Services.AddScoped<IRolDePagosComponente, RolDePagosCompuesto>();
+builder.Services.AddScoped<IRolDePagosComponente, RolDePagosIndividual>();
 
 
 var app = builder.Build();

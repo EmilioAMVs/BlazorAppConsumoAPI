@@ -1,9 +1,8 @@
-﻿@page "/dashboard"
+﻿@page "/Trabajadores"
 @using BlazorAppConsumoAPI.Models;
 @inject IJSRuntime JSRuntime
 
 <style>
-
     body {
         font-family: Arial, sans-serif;
         font-size: 25px;
@@ -18,7 +17,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-radius: 5px; 
+        border-radius: 5px; /
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
     }
 
@@ -34,6 +33,7 @@
                 color: #cceeff;
             }
 
+
     .dashboard-content {
         margin-top: 2rem;
         padding: 2rem;
@@ -41,6 +41,7 @@
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+
 
     .footer {
         background-color: #343a40; 
@@ -55,7 +56,7 @@
     }
 </style>
 
-<h1 style="text-align: center;">Inicio</h1>
+<h1 style="text-align: center;">Trabajadores</h1>
 
 <!-- Navbar con las opciones de navegación -->
 <nav class="navbar">
