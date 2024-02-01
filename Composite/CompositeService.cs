@@ -71,48 +71,7 @@ namespace BlazorAppConsumoAPI.Composite
 
         return centroCostosRespuesta.FirstOrDefault();
     }
-
-    public async Task<CentroDeCostos> PutCentroDeCosto(int? codigoCentroDeCostos, string descripcionCentroDeCostos)
-    {
-        var query = HttpUtility.ParseQueryString(string.Empty);
-        query["codigocentrocostos"] = codigoCentroDeCostos.ToString();
-        query["descripcioncentrocostos"] = descripcionCentroDeCostos;
-        var queryString = query.ToString();
-
-        var response = await _httpClient.GetAsync($"Varios/CentroCostosUpdate?{queryString}");
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync();
-
-        var centroCosto = JsonConvert.DeserializeObject<List<CentroDeCostos>>(content);
-
-        if (centroCosto == null)
-        {
-            throw new InvalidOperationException("No se pudieron recibier datos del centro de costos");
-        }
-
-        return centroCosto.FirstOrDefault();
-    }
-
-    public async Task<CentroDeCostos> DeleteCentroDeCosto(int codigoCentroDeCostos, string descripcionCentroDeCostos)
-    {
-        var query = HttpUtility.ParseQueryString(string.Empty);
-        query["codigocentrocostos"] = codigoCentroDeCostos.ToString();
-        query["descripcioncentrocostos"] = descripcionCentroDeCostos;
-        var queryString = query.ToString();
-
-        var response = await _httpClient.GetAsync($"Varios/CentroCostosDelete?{queryString}");
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync();
-
-        var centroCosto = JsonConvert.DeserializeObject<CentroDeCostos>(content);
-        if (centroCosto == null)
-        {
-            throw new InvalidOperationException("No se recibieron datos del centro de costos eliminado.");
-        }
-        return centroCosto;
-    }
+   
 
     public async Task<List<Empleado>> GetEmpleadosBySucursal(int sucursal)
     {

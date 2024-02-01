@@ -11,8 +11,6 @@ namespace BlazorAppConsumoAPI.Composite
         Task<InfoUsuario> Login(ModeloDeLogin usuarioLogin);
         Task<List<CentroDeCostos>> GetCentroDeCostos();
         Task<CentroDeCostos> PostCentroDeCosto(CentroDeCostos centroDeCostos);
-        Task<CentroDeCostos> PutCentroDeCosto(int? codigoCentroDeCostos, string descripcionCentroDeCostos);
-        Task<CentroDeCostos> DeleteCentroDeCosto(int codigoCentroDeCostos, string descripcionCentroDeCostos);
 
     }
 }
