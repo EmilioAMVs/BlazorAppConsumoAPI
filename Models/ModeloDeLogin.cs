@@ -2,11 +2,11 @@
 
 namespace BlazorAppConsumoAPI.Models
 {
-        public class LoginModel
+        public class ModeloDeLogin
         {
             [Required]
-            [StringLength(4, ErrorMessage = "El nombre de usuario debe tener exactamente 4 caracteres.", MinimumLength = 4)]
-            public string Usuario { get; set; }
+            [StringLength(4)]
+            public string User { get; set; }
 
             [Required]
             public string Password { get; set; }

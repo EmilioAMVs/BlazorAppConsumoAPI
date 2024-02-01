@@ -1,4 +1,4 @@
-﻿@page "/dashboard"
+﻿@page "/Inicio"
 @using BlazorAppConsumoAPI.Models;
 @inject IJSRuntime JSRuntime
 
@@ -54,28 +54,34 @@
         border-top: 1px solid rgba(255, 255, 255, 0.1); 
     }
 </style>
-
-<h1 style="text-align: center;">Inicio</h1>
-
-<!-- Navbar con las opciones de navegación -->
 <nav class="navbar">
     <div>
+        <a href="/Inicio">Inicio</a>
         <a href="/Movimiento Planillas">Movimiento Planillas</a>
-        <a href="/Trabajadores">Trabajadores</a>
+        <a href="/Empleados">Empleados</a>
         <a href="/Rol de Pagos">Rol de Pagos</a>
+        <a href="/Index">Centro de Costos</a>
     </div>
 </nav>
+<h1 style="text-align: center;">Inicio</h1>
 
-<!-- Contenido del dashboard -->
 <div class="dashboard-content">
-    <div>Emisor: @nombreEmisor</div>
-    Perfil: @perfilUsuario
+    <div><strong>Nombre Emisor:</strong> @nombreEmisor</div>
+    <strong>Codigo Emisor:</strong> @Emisor<br />
+    <br />
+    <strong>Usuario:</strong> @nombreUsuario<br />
+    <strong>Perfil:</strong> @perfilUsuario<br />
+    <strong>Ruc:</strong> @RUC<br />
 </div>
+
 
 
 @code {
     private string nombreEmisor;
+    private string nombreUsuario;
     private string perfilUsuario;
+    private string RUC;
+    private string Emisor;
 
     protected override async Task OnInitializedAsync()
     {
@@ -84,11 +90,14 @@
 
     private async Task LoadUserData()
     {
-        var userData = await JSRuntime.InvokeAsync<UsuarioResponse>("getUserData");
+        var userData = await JSRuntime.InvokeAsync<InfoUsuario>("getUserData");
         if (userData != null)
         {
             nombreEmisor = userData.NombreEmisor;
             perfilUsuario = userData.Perfil;
+            RUC = userData.RucUsuario;
+            nombreUsuario = userData.NombreUsuario;
+            Emisor = userData.Emisor;
         }
     }
 }

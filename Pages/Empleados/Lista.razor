@@ -1,0 +1,128 @@
+﻿@page "/Empleados"
+
+@using BlazorAppConsumoAPI.Composite
+@using BlazorAppConsumoAPI.Models
+
+@inject Composite.IComponent _composite
+@inject IJSRuntime JSRuntime
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 25px;
+        line-height: 1.5;
+        background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV4ri5YbK9_7_RvvEhJoUrhQncRiIG9t8XNg&usqp=CAU);
+    }
+
+    .navbar {
+        background-color: midnightblue;
+        color: #fff;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .button-group {
+        font-family: Arial, sans-serif; 
+        font-size: 20px;
+    }
+
+
+        .navbar a {
+            color: inherit;
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: color 0.3s ease-in-out;
+        }
+
+            .navbar a:hover {
+                color: #cceeff;
+            }
+
+    form {
+        display: flex;
+        align-items: start;
+        justify-content: start;}
+</style>
+
+<nav class="navbar">
+    <div>
+        <a href="/Inicio">Inicio</a>
+        <a href="/Movimiento Planillas">Movimiento Planillas</a>
+        <a href="/Empleados">Empleados</a>
+        <a href="/Rol de Pagos">Rol de Pagos</a>
+        <a href="/Index">Centro de Costos</a>
+    </div>
+</nav>
+
+<h1 style="text-align:center">Empleados</h1>
+    <form @onsubmit="BusquedaPorSucursal" class="flex items-center">
+        <div class="flex items-start">
+            <label># Sucursal</label>
+            <input @bind="IdSucursal" type="number" required class="mr-2">
+            <button class="button-group">Buscar</button>
+        </div>
+    </form>
+
+
+
+
+<div class="flex justify-center items-center">
+    <div style="padding: 20px; font-size:20px">
+        <table id="empleadosTable" style="border-collapse: collapse; width: 100%; margin-top: 20px;">
+            <thead>
+                <tr style="border: 3px solid #ccc">
+                    
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">ID</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Tipo</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Apellido Paterno</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Apellido Materno</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Nombres</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Identificación</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Entidad Bancaria</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc"># Cuenta Bancaria</th>
+                    <th scope="col" style="text-align: center">Direccion</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var empleado in empleados)
+                {
+                    <tr style="border: 3px solid #ccc; text-align:center">
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@empleado.Id_Trabajador</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@empleado.Tipo_Trabajador</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@empleado.Apellido_Paterno</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@empleado.Apellido_Materno</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@empleado.Nombres</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@empleado.Identificacion</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@empleado.Entidad_Bancaria</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@empleado.Nro_Cuenta_Bancaria</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@empleado.Direccion</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+@code {
+    private List<Empleado> empleados = new List<Empleado>();
+    private int IdSucursal;
+
+    private async Task BusquedaPorSucursal()
+    {
+        try
+        {
+            empleados = await _composite.GetEmpleadosBySucursal(IdSucursal); 
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Sucursal Invalida"); // Muestra una alerta con el mensaje de error
+        }
+    }
+}

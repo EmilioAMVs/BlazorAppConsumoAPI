@@ -1,6 +1,8 @@
 ﻿@page "/Rol de Pagos"
 @using BlazorAppConsumoAPI.Models;
+
 @inject IJSRuntime JSRuntime
+@inject Observer.IRolDePagosService _observer
 
 <style>
     body {
@@ -21,7 +23,6 @@
         border-radius: 5px; 
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
     }
-
 
         .navbar a {
             color: inherit; 
@@ -58,15 +59,16 @@
     }
 
     .button-group {
-        grid-column: 2; /* Posición en la segunda columna */
         display: flex;
-        justify-content: center; 
+        justify-content: flex-start; 
         font-family: Arial, sans-serif; /* Utiliza la misma fuente que el cuerpo del texto */
         font-size: 25px;
+        
     }
 
         .button-group button {
             margin-left: 10px; /* Margen entre los botones */
+            background-color: black;
         }
 
     .form-control {
@@ -75,16 +77,18 @@
     }
 </style>
 
-<h1 style="text-align: center;">Rol de Pagos</h1>
 
 <!-- Navbar con las opciones de navegación -->
 <nav class="navbar">
     <div>
+        <a href="/Inicio">Inicio</a>
         <a href="/Movimiento Planillas">Movimiento Planillas</a>
-        <a href="/Trabajadores">Trabajadores</a>
+        <a href="/Empleados">Empleados</a>
         <a href="/Rol de Pagos">Rol de Pagos</a>
+        <a href="/Index">Centro de Costos</a>
     </div>
 </nav>
+<h1 style="text-align: center;">Rol de Pagos</h1>
 <br />
 <div class="form-group">
     <label for="fechaNacimiento">Fecha de Nacimiento:</label>
@@ -111,10 +115,7 @@
         <option value="nomina">Nómina</option>
     </select>
 </div>
-<div class="button-group">
-    <button class="btn btn-primary">Crear</button>
-    <button class="btn btn-success">Ver</button>
-</div>
+
 <div class="form-group">
     <label for="bonificacion">Bonificación:</label>
     <input type="number" class="form-control" @bind="bonificacion" />
@@ -148,6 +149,7 @@
     <label for="reIngreso">Re Ingreso:</label>
     <input type="checkbox" @bind="reIngreso" />
 </div>
+
 @if (reIngreso)
 {
     <div class="form-group">
@@ -155,8 +157,12 @@
         <input type="date" class="form-control" @bind="reIngresoFecha" />
     </div>
 }
-
-
+<div class="button-group">
+    <button class="btn btn-primary" @onclick="@(async () => await GuardarRolDePagos(rolDePagos))">Crear</button>
+</div>
+<div style="padding-left:15px">    
+    <a href="/VerRol">Ver Rol</a>
+</div>
 
 @code {
     private DateTime fechaNacimiento;
@@ -171,25 +177,34 @@
     private string formaCalculoDecimo14;
     private bool reIngreso;
     private DateTime reIngresoFecha;
-}
+    public List<RolDePagos> listaRolesDePagos = new List<RolDePagos>();
+    public RolDePagos rolDePagos;
 
-@code {
-    private string nombreEmisor;
-    private string perfilUsuario;
 
-    protected override async Task OnInitializedAsync()
+    public async Task GuardarRolDePagos(RolDePagos rolDePagos)
     {
-        await LoadUserData();
+        listaRolesDePagos.Add(rolDePagos);
+        LimpiarCampos();
     }
 
-    private async Task LoadUserData()
+
+    private void LimpiarCampos()
     {
-        var userData = await JSRuntime.InvokeAsync<UsuarioResponse>("getUserData");
-        if (userData != null)
-        {
-            nombreEmisor = userData.NombreEmisor;
-            perfilUsuario = userData.Perfil;
-        }
+        // Limpiar los campos del formulario
+        fechaNacimiento = DateTime.Now;
+        fechaIngreso = DateTime.Now;
+        cuentaBancaria = string.Empty;
+        banco = string.Empty;
+        tipoCuenta = string.Empty;
+        bonificacion = 0;
+        sueldoBase = 0;
+        fondoReserva = 0;
+        formaCalculoDecimo13 = string.Empty;
+        formaCalculoDecimo14 = string.Empty;
+        reIngreso = false;
+        reIngresoFecha = DateTime.Now;
     }
+
+
 }
 

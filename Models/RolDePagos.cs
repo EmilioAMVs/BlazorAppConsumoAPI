@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNetCore.Components;
+
 namespace BlazorAppConsumoAPI.Models
 {
     public class RolDePagos
@@ -14,6 +16,7 @@ namespace BlazorAppConsumoAPI.Models
         public string FormaCalculoDecimo13 { get; set; }
         public string FormaCalculoDecimo14 { get; set; }
         public bool ReIngreso { get; set; }
-        public DateTime? ReIngresoFecha { get; set; } // El signo de interrogación indica que la fecha puede ser nula
+        public DateTime ReIngresoFecha { get; set; }
+
     }
 }

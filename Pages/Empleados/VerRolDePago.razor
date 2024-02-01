@@ -1,0 +1,131 @@
+﻿@page "/VerRol"
+@using BlazorAppConsumoAPI.Models
+@inject IJSRuntime JSRuntime
+@inject Observer.IRolDePagosService _observer
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 25px;
+        line-height: 1.5;
+        background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV4ri5YbK9_7_RvvEhJoUrhQncRiIG9t8XNg&usqp=CAU);
+    }
+
+    /* Navbar */
+    .navbar {
+        background-color: midnightblue;
+        color: #fff;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+        .navbar a {
+            color: inherit;
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: color 0.3s ease-in-out;
+        }
+
+            .navbar a:hover {
+                color: #cceeff;
+            }
+
+    .dashboard-content {
+        margin-top: 2rem;
+        padding: 2rem;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .footer {
+        background-color: #343a40;
+        color: #fff;
+        padding: 1rem;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: flex-start;
+        font-family: Arial, sans-serif; /* Utiliza la misma fuente que el cuerpo del texto */
+        font-size: 25px;
+    }
+
+        .button-group button {
+            margin-left: 10px; /* Margen entre los botones */
+            background-color: black;
+        }
+
+    .form-control {
+        font-family: Arial, sans-serif; /* Utiliza la misma fuente que el cuerpo del texto */
+        font-size: 25px;
+    }
+</style>
+<nav class="navbar">
+    <div>
+        <a href="/Inicio">Inicio</a>
+        <a href="/Movimiento Planillas">Movimiento Planillas</a>
+        <a href="/Empleados">Empleados</a>
+        <a href="/Rol de Pagos">Rol de Pagos</a>
+        <a href="/Index">Centro de Costos</a>
+    </div>
+</nav>
+<h1 style="text-align: center;">Lista de Roles de Pagos</h1>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Fecha de Nacimiento</th>
+                <th>Fecha de Ingreso</th>
+                <th>Cuenta Bancaria</th>
+                <th>Banco</th>
+                <th>Tipo de Cuenta</th>
+                <th>Bonificación</th>
+                <th>Sueldo Base</th>
+                <th>Fondo de Reserva</th>
+                <th>Forma de Cálculo Décimo 13</th>
+                <th>Forma de Cálculo Décimo 14</th>
+                <th>Re Ingreso</th>
+                <th>Fecha de Re Ingreso</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- @foreach (var rol in rolesDePagos)
+            {
+                <tr>
+                    <td>@rol.listaRolesDePagos</td>
+                    <td>@rol.FechaIngreso</td>
+                    <td>@rol.CuentaBancaria</td>
+                    <td>@rol.Banco</td>
+                    <td>@rol.TipoCuenta</td>
+                    <td>@rol.Bonificacion</td>
+                    <td>@rol.SueldoBase</td>
+                    <td>@rol.FondoReserva</td>
+                    <td>@rol.FormaCalculoDecimo13</td>
+                    <td>@rol.FormaCalculoDecimo14</td>
+                    <td>@rol.ReIngreso</td>
+                    <td>@(rol.ReIngreso ? rol.ReIngresoFecha.ToString() : "")</td>
+                </tr>
+            } -->
+        </tbody>
+    </table>
+
+
+@code {
+    private List<RolDePagos> rolesDePagos;
+
+}

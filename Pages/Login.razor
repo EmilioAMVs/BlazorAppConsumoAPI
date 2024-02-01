@@ -12,11 +12,11 @@
     <div class="bottom"></div>
     <div class="center">
         <div class="forms-container">
-                <form class="sign-in-form" @onsubmit="HandleLogin">
-                    <h3 class="title">Inicio de sesión</h3>
+                <form class="sign-in-form" @onsubmit="ValidarLogin">
+                    <h3>Inicio de sesión</h3>
                     <div class="input-field">
                         <i class="fas fa-user"></i>
-                        <input type="text" placeholder="Usuario" @bind="loginModel.Usuario" />
+                        <input type="text" placeholder="Usuario" @bind="loginModel.User" />
                     </div>
                     <div class="input-field">
                         <i class="fas fa-lock"></i>
@@ -24,7 +24,7 @@
                     </div>
                     <div class="input-field">
                         <i class="fas fa-chevron-down arrow-icon"></i>
-                        <select id="opciones" name="opciones" @bind="selectedEmisor">
+                        <select id="opciones" name="opciones" @bind="emisorSeleccionado">
                             <option value="" disabled selected hidden>Seleccione Emisor</option>
                             @if (emisores != null)
                             {
@@ -39,14 +39,15 @@
                             }
                         </select>
                     </div>
-                    @if (!string.IsNullOrEmpty(errorMessage))
-                    {
-                        <div class="error-message" style="color:red">
-                            @errorMessage
-                        </div>
-                    }
+
                     <input type="submit" value="Ingresar" class="btn solid" />
                     <div class="social-media"></div>
+                @if (!string.IsNullOrEmpty(validacionMensaje))
+                {
+                    <div class="error-message" style="color:darkred">
+                        @validacionMensaje
+                    </div>
+                }
                 </form>
             </div>
         </div>
@@ -136,69 +137,59 @@ body {
 
 
 @code {
-    private LoginModel loginModel = new LoginModel();
+    private ModeloDeLogin loginModel = new ModeloDeLogin();
     private List<Emisor> emisores;
-    private int selectedEmisor;
-    private string errorMessage = "";
+    private int emisorSeleccionado;
+    private string validacionMensaje;
 
     protected override async Task OnInitializedAsync()
     {
         emisores = await _composite.GetEmisores();
     }
 
-    private async Task HandleLogin()
+    private async Task ValidarLogin()
     {
-        errorMessage = ""; // Limpiar mensajes de error anteriores
-
-        // Validar que el usuario no sea nulo o vacío
-        if (string.IsNullOrEmpty(loginModel.Usuario))
+        validacionMensaje = "";
+        if (string.IsNullOrEmpty(loginModel.User))
         {
-            errorMessage = "El usuario no debe estar vacío.";
+            validacionMensaje = "Ingrese un Ussuario";
             return;
         }
-
-        // Validar que la contraseña no sea nula o vacía
         if (string.IsNullOrEmpty(loginModel.Password))
         {
-            errorMessage = "La contraseña no debe estar vacía.";
+            validacionMensaje = "Ingrese una contraseña";
             return;
         }
-
-        // Validar que la contraseña tenga exactamente 4 caracteres
-        if (loginModel.Usuario.Length != 4)
+        if (loginModel.User.Length != 4)
         {
-            errorMessage = "El usuario debe tener exactamente 4 caracteres.";
+            validacionMensaje = "El usuario debde tener 4 caracteres";
             return;
         }
-
         try
         {
             var usuarioResponse = await _composite.Login(loginModel);
 
             if (usuarioResponse != null && usuarioResponse.Observacion == "INGRESO EXITOSO")
             {
-                if (usuarioResponse.Emisor == selectedEmisor.ToString())
+                if (usuarioResponse.Emisor == emisorSeleccionado.ToString())
                 {
-
-                    //Guarda en la variable de sesion saveUserData informacion especifica del usuario.
                     await JSRuntime.InvokeVoidAsync("saveUserData", usuarioResponse);
 
-                    // Redireccionar a Dashboard.razor
-                    NavigationManager.NavigateTo("/dashboard");
+                    NavigationManager.NavigateTo("/Inicio");
                 }
                 else
                 {
-                    errorMessage = "El emisor seleccionado no coincide con el emisor del usuario ingresado.";
+                    validacionMensaje = "Error con el usuario Ingresado";
                 }
             }
             else
             {
-                errorMessage = "El inicio de sesión no fue exitoso. Por favor, verifique sus credenciales.";
+                validacionMensaje = "Usuario o contraseña incorrecta";
             }
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error durante el inicio de sesión: {ex.Message}";
+            validacionMensaje = $"Erros inesperado: {ex.Message}";
         }
     }
 }

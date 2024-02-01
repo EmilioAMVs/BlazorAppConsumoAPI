@@ -1,4 +1,5 @@
 ﻿using BlazorAppConsumoAPI.Models;
+using BlazorAppConsumoAPI.Pages;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Web;
@@ -22,10 +23,10 @@ namespace BlazorAppConsumoAPI.Composite
             return await response.Content.ReadFromJsonAsync<List<Emisor>>();
         }
 
-        public async Task<UsuarioResponse> Login(LoginModel usuarioLogin)
+        public async Task<InfoUsuario> Login(ModeloDeLogin usuarioLogin)
         {
             var query = HttpUtility.ParseQueryString(string.Empty);
-            query["usuario"] = usuarioLogin.Usuario;
+            query["usuario"] = usuarioLogin.User;
             query["password"] = usuarioLogin.Password;
             var queryString = query.ToString();
 
@@ -33,7 +34,7 @@ namespace BlazorAppConsumoAPI.Composite
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
-            var usuarios = JsonConvert.DeserializeObject<List<UsuarioResponse>>(content);
+            var usuarios = JsonConvert.DeserializeObject<List<InfoUsuario>>(content);
 
             if (usuarios == null || !usuarios.Any())
             {
@@ -42,9 +43,128 @@ namespace BlazorAppConsumoAPI.Composite
 
             return usuarios.FirstOrDefault();
         }
+    
+
+    public async Task<List<CentroDeCostos>> GetCentroDeCostos()
+    {
+        var response = await _httpClient.GetAsync("Varios/CentroCostosSelect");
+        response.EnsureSuccessStatusCode();
+
+        var centroDeCostos = await response.Content.ReadFromJsonAsync<List<CentroDeCostos>>();
+
+        if (centroDeCostos == null)
+        {
+            throw new InvalidOperationException("No se pudieron recibir datos de los centros de costos");
+        }
+
+        return centroDeCostos;
     }
 
-    public class Emisores
+    public async Task<CentroDeCostos> PostCentroDeCosto(CentroDeCostos centroDeCosto)
+    {
+        var url = $"Varios/CentroCostosInsert?codigocentrocostos={centroDeCosto.Codigo}&descripcioncentrocostos={Uri.EscapeDataString(centroDeCosto.NombreCentroCostos)}";
+
+        var response = await _httpClient.PostAsync(url, null);
+        response.EnsureSuccessStatusCode();
+
+        var centroCostosRespuesta = await response.Content.ReadFromJsonAsync<List<CentroDeCostos>>();
+
+        return centroCostosRespuesta.FirstOrDefault();
+    }
+
+    public async Task<CentroDeCostos> PutCentroDeCosto(int? codigoCentroDeCostos, string descripcionCentroDeCostos)
+    {
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query["codigocentrocostos"] = codigoCentroDeCostos.ToString();
+        query["descripcioncentrocostos"] = descripcionCentroDeCostos;
+        var queryString = query.ToString();
+
+        var response = await _httpClient.GetAsync($"Varios/CentroCostosUpdate?{queryString}");
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+
+        var centroCosto = JsonConvert.DeserializeObject<List<CentroDeCostos>>(content);
+
+        if (centroCosto == null)
+        {
+            throw new InvalidOperationException("No se pudieron recibier datos del centro de costos");
+        }
+
+        return centroCosto.FirstOrDefault();
+    }
+
+    public async Task<CentroDeCostos> DeleteCentroDeCosto(int codigoCentroDeCostos, string descripcionCentroDeCostos)
+    {
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query["codigocentrocostos"] = codigoCentroDeCostos.ToString();
+        query["descripcioncentrocostos"] = descripcionCentroDeCostos;
+        var queryString = query.ToString();
+
+        var response = await _httpClient.GetAsync($"Varios/CentroCostosDelete?{queryString}");
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+
+        var centroCosto = JsonConvert.DeserializeObject<CentroDeCostos>(content);
+        if (centroCosto == null)
+        {
+            throw new InvalidOperationException("No se recibieron datos del centro de costos eliminado.");
+        }
+        return centroCosto;
+    }
+
+    public async Task<List<Empleado>> GetEmpleadosBySucursal(int sucursal)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"Varios/TrabajadorSelect?sucursal={sucursal}");
+            response.EnsureSuccessStatusCode();
+
+            var trabajadores = await response.Content.ReadFromJsonAsync<List<Empleado>>();
+
+            if (trabajadores == null || !trabajadores.Any())
+            {
+                throw new InvalidOperationException("No se recibieron datos de trabajadores.");
+            }
+
+            return trabajadores;
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException($"Error al obtener trabajadores de la sucursal {sucursal}: {ex.Message}", ex);
+        }
+    }
+        public async Task<List<MovimientoPlanilla>> GetMovimientosDePlanilla()
+        {
+            var response = await _httpClient.GetAsync("Varios/MovimientoPlanillaSelect");
+            response.EnsureSuccessStatusCode();
+
+            var movimientosPlanilla = await response.Content.ReadFromJsonAsync<List<MovimientoPlanilla>>();
+
+            if (movimientosPlanilla == null)
+            {
+                throw new InvalidOperationException("No se recibieron datos de movimientos de planilla.");
+            }
+
+            return movimientosPlanilla;
+        }
+    }
+    public class CentroCostoStateService
+    {
+        private List<CentroDeCostos> centroCostos;
+
+        public void SetCentroCostos(List<CentroDeCostos> centros)
+        {
+            centroCostos = centros;
+        }
+
+        public CentroDeCostos GetCentroDeCostoByCodigo(int codigo)
+        {
+            return centroCostos?.FirstOrDefault(cc => cc.Codigo == codigo);
+        }
+    }
+        public class Emisores
     {
         private readonly IComponent _component;
 
@@ -56,7 +176,7 @@ namespace BlazorAppConsumoAPI.Composite
         public async Task RealizarOperaciones()
         {
             var emisores = await _component.GetEmisores();
-            var usuario = await _component.Login(new LoginModel { Usuario = "user", Password = "password" });
+            var usuario = await _component.Login(new ModeloDeLogin { User = "user", Password = "password" });
         }
     }
 }

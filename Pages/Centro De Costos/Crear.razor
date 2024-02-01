@@ -1,0 +1,111 @@
+﻿@page "/Crear"
+@using BlazorAppConsumoAPI.Composite
+@using BlazorAppConsumoAPI.Models
+
+@inject Composite.IComponent _composite
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@inject CentroCostoStateService centroCostoStateService
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 25px;
+        line-height: 1.5;
+        background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV4ri5YbK9_7_RvvEhJoUrhQncRiIG9t8XNg&usqp=CAU);
+        text-align:center;
+    }
+
+    .navbar {
+        background-color: midnightblue;
+        color: #fff;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .navbar2 {
+        background-color: floralwhite;
+        color: #fff;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .button-group {
+        font-family: Arial, sans-serif;
+        font-size: 20px;
+        padding-left: 15px;
+    }
+
+
+    .navbar a {
+        color: inherit;
+        text-decoration: none;
+        margin: 0 1rem;
+        transition: color 0.3s ease-in-out;
+    }
+
+        .navbar a:hover {
+            color: #cceeff;
+        }
+
+    form {
+        display: contents;
+        align-items: start;
+        justify-content: start;
+    }
+</style>
+<nav class="navbar">
+    <div>
+        <a href="/Inicio">Inicio</a>
+        <a href="/Movimiento Planillas">Movimiento Planillas</a>
+        <a href="/Empleados">Empleados</a>
+        <a href="/Rol de Pagos">Rol de Pagos</a>
+        <a href="/Index">Centro de Costos</a>
+    </div>
+</nav>
+<h1>Creacion Centro de Costos</h1>
+<br />
+
+<form @onsubmit="PostCentroDeCosto">
+    <div>
+        <label>Codigo</label>
+        <input @bind="centroCosto.Codigo" type="number" placeholder="Ingrese el codigo del centro">
+    </div>
+    <div>
+        <label>Nombre</label>
+        <input @bind="centroCosto.NombreCentroCostos" type="text" placeholder="Ingrese el nombre del centro">
+    </div>
+    <br />
+    <div class="button-group;">
+        <button class="btn btn-primary" type="submit">Crear Centro</button>
+    </div>
+    <br />
+    <a href="/Index">Volver</a>
+</form>
+
+
+@code {
+    private CentroDeCostos centroCosto = new CentroDeCostos();
+
+    private async Task PostCentroDeCosto()
+    {
+        var mensaje = await _composite.PostCentroDeCosto(centroCosto);
+
+        if (mensaje.Mensaje == "El registro que desea ingresar ya existe")
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "El registro que desea ingresar ya existe");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/Index");
+        }
+    }
+}

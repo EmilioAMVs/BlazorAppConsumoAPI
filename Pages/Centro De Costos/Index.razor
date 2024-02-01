@@ -1,0 +1,113 @@
+﻿@page "/Index"
+@using BlazorAppConsumoAPI.Composite
+@using BlazorAppConsumoAPI.Models
+
+@inject Composite.IComponent _composite
+@inject IJSRuntime JSRuntime
+@inject CentroCostoStateService centroCostoStateService
+
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 25px;
+        line-height: 1.5;
+        background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV4ri5YbK9_7_RvvEhJoUrhQncRiIG9t8XNg&usqp=CAU);
+    }
+
+    .navbar {
+        background-color: midnightblue;
+        color: #fff;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .navbar2 {
+        background-color: floralwhite;
+        color: #fff;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .button-group {
+        font-family: Arial, sans-serif; 
+        font-size: 20px;
+    }
+
+
+        .navbar a {
+            color: inherit;
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: color 0.3s ease-in-out;
+        }
+
+            .navbar a:hover {
+                color: #cceeff;
+            }
+
+    form {
+        display: flex;
+        align-items: start;
+        justify-content: start;}
+</style>
+
+
+<nav class="navbar">
+    <div>
+        <a href="/Inicio">Inicio</a>
+        <a href="/Movimiento Planillas">Movimiento Planillas</a>
+        <a href="/Empleados">Empleados</a>
+        <a href="/Rol de Pagos">Rol de Pagos</a>
+        <a href="/Index">Centro de Costos</a>
+    </div>
+</nav>
+
+<h1 style="text-align:center">Centro De Costos</h1>
+<nav class="navbar2 font-size:25px">
+    <a href="/Crear">Crear Centro</a>
+</nav>
+
+<div class="flex justify-center items-center">
+    <div style="padding: 20px; font-size:20px">
+        <table id="empleadosTable" style="border-collapse: collapse; width: 100%; margin-top: 20px;">
+            <thead>
+                <tr style="border: 3px solid #ccc">
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Código</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Nombre del Centro de Costos</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Mensaje</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var centroCosto in centroCostos)
+                {
+                    <tr style="border: 3px solid #ccc; text-align:center">
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@centroCosto.Codigo</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@centroCosto.NombreCentroCostos</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@centroCosto.Mensaje</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@code {
+    private List<CentroDeCostos> centroCostos = new List<CentroDeCostos>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        centroCostos = await _composite.GetCentroDeCostos();
+        centroCostoStateService.SetCentroCostos(centroCostos);
+    }
+}

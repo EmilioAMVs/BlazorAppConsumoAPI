@@ -1,0 +1,110 @@
+﻿@page "/Movimiento Planillas"
+@using BlazorAppConsumoAPI.Models;
+
+@inject Composite.IComponent _composite
+@inject IJSRuntime JSRuntime
+
+<style>
+
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 25px;
+        line-height: 1.5;
+        background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV4ri5YbK9_7_RvvEhJoUrhQncRiIG9t8XNg&usqp=CAU);
+    }
+
+    .navbar {
+        background-color: midnightblue; 
+        color: #fff; 
+        padding: 1rem 1.5rem; 
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 5px; 
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);} 
+
+
+        .navbar a {
+            color: inherit;
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: color 0.3s ease-in-out;
+        }
+
+            .navbar a:hover {
+                color: #cceeff;
+            }
+
+    .dashboard-content {
+        margin-top: 2rem;
+        padding: 2rem;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .footer {
+        background-color: #343a40;
+        color: #fff;
+        padding: 1rem;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+</style>
+
+
+<nav class="navbar">
+    <div>
+        <a href="/Inicio">Inicio</a>
+        <a href="/Movimiento Planillas">Movimiento Planillas</a>
+        <a href="/Empleados">Empleados</a>
+        <a href="/Rol de Pagos">Rol de Pagos</a>
+        <a href="/Index">Centro de Costos</a>
+    </div>
+</nav>
+<h1 style="text-align:center">Movimiento Planillas</h1>
+
+<div class="flex justify-center items-center">
+    <div style="padding: 20px; font-size:20px">
+        <table id="empleadosTable" style="border-collapse: collapse; width: 100%; margin-top: 20px;">
+            <thead>
+                <tr style="border: 3px solid #ccc">
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Codigo</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Concepto</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Prioridad</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Tipo Operacion</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Cuenta1</th>
+                    <th scope="col" style="text-align: center;border-right: 3px solid #ccc">Cuenta2</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var movimiento in movimientoPlantillas)
+                {
+                    <tr style="border: 3px solid #ccc;text-align:center">
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@movimiento.CodigoConcepto</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@movimiento.Concepto</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@movimiento.Prioridad</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@movimiento.TipoOperacion</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@movimiento.Cuenta1</td>
+                        <td style="padding: 10px;border-right: 3px solid #ccc">@movimiento.Cuenta2</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@code {
+    private List<MovimientoPlanilla> movimientoPlantillas = new List<MovimientoPlanilla>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        movimientoPlantillas = await _composite.GetMovimientosDePlanilla();
+    }
+}
+

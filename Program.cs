@@ -19,8 +19,10 @@ builder.Services.AddScoped<APITTHH>();
 // Registra tus servicios aquí
 builder.Services.AddScoped<BlazorAppConsumoAPI.Composite.IComponent, CompositeService>();
 
-builder.Services.AddScoped<IRolDePagosComponente, RolDePagosCompuesto>();
-builder.Services.AddScoped<IRolDePagosComponente, RolDePagosIndividual>();
+builder.Services.AddScoped<IRolDePagosService, RolDePagosService>();
+
+builder.Services.AddScoped<CentroCostoStateService>();
+
 
 
 var app = builder.Build();
